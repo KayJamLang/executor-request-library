@@ -1,0 +1,28 @@
+plugins {
+    id 'java-library'
+}
+
+group 'com.github.kayjamlang'
+version '0.1'
+
+repositories {
+    mavenCentral()
+}
+
+jar {
+    manifest {
+        attributes(
+                'Main-Class': 'com.github.kayjamlang.executor.cli.Main'
+        )
+    }
+    from {
+        configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
+    }
+
+}
+
+
+dependencies {
+    compileOnly "com.github.kayjamlang:executor:0.1.3.10"
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+}

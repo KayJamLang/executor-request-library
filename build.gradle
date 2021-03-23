@@ -7,6 +7,9 @@ version '0.1'
 
 repositories {
     mavenCentral()
+    maven {
+        url "https://oss.sonatype.org/service/local/repositories/releases/content/"
+    }
 }
 
 jar {
@@ -23,6 +26,6 @@ jar {
 
 
 dependencies {
-    compileOnly "com.github.kayjamlang:executor:0.1.3.16"
+    compileOnly "com.github.kayjamlang:executor:0.1.3.17-fix1"
     testCompile group: 'junit', name: 'junit', version: '4.12'
 }

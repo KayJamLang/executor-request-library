@@ -3,6 +3,7 @@ package com.github.kayjamlang.request;
 import com.github.kayjamlang.core.Argument;
 import com.github.kayjamlang.core.Type;
 import com.github.kayjamlang.core.containers.ClassContainer;
+import com.github.kayjamlang.executor.Context;
 import com.github.kayjamlang.executor.libs.Library;
 import com.github.kayjamlang.executor.libs.main.MapClass;
 
@@ -17,8 +18,8 @@ public class RequestLibrary extends Library {
 
     public RequestLibrary() throws Exception {
         addFunction(new LibFunction("buildHttpQuery", (mainContext, context) -> {
-            Map<Object, Object> queryMap = ((MapClass) context.variables.get("query"))
-                    .getMap(context);
+            MapClass map = (MapClass) context.variables.get("query");
+            Map<Object, Object> queryMap = map.getVariable((Context) map.data.get("ctx"), MapClass.FIELD_MAP);
 
             StringBuilder query = new StringBuilder();
             for(Map.Entry<Object, Object> entry: queryMap.entrySet()){

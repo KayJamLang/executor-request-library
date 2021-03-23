@@ -12,6 +12,8 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 public class RequestLibrary extends Library {
@@ -21,12 +23,9 @@ public class RequestLibrary extends Library {
             MapClass map = (MapClass) context.variables.get("query");
             Map<Object, Object> queryMap = map.getVariable((Context) map.data.get("ctx"), MapClass.FIELD_MAP);
 
-            StringBuilder query = new StringBuilder();
+            List<String> query = new ArrayList<>();
             for(Map.Entry<Object, Object> entry: queryMap.entrySet()){
-                query.append(query.length()==0?"?":"&")
-                        .append(entry.getKey().toString())
-                        .append(URLEncoder.encode(entry.getValue().toString(),
-                                "UTF-8"));
+                query.add(entry.getKey()+"="+URLEncoder.encode((String) entry.getValue(), "UTF-8"));
             }
 
             return query.toString();

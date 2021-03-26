@@ -6,8 +6,10 @@ import com.github.kayjamlang.core.containers.ClassContainer;
 import com.github.kayjamlang.executor.Context;
 import com.github.kayjamlang.executor.libs.Library;
 import com.github.kayjamlang.executor.libs.main.MapClass;
+import org.mozilla.universalchardet.UniversalDetector;
 
 import java.io.BufferedReader;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -15,6 +17,7 @@ import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Scanner;
 
 public class RequestLibrary extends Library {
 
@@ -25,10 +28,10 @@ public class RequestLibrary extends Library {
 
             List<String> query = new ArrayList<>();
             for(Map.Entry<Object, Object> entry: queryMap.entrySet()){
-                query.add(entry.getKey()+"="+URLEncoder.encode((String) entry.getValue(), "UTF-8"));
+                query.add(entry.getKey()+"="+URLEncoder.encode(entry.getValue().toString(), "UTF-8"));
             }
 
-            return query.toString();
+            return String.join("&", query);
         }, new Argument(new Type("map", ClassContainer.class, false),
                 "query")));
 
@@ -46,11 +49,13 @@ public class RequestLibrary extends Library {
                 connection.setRequestMethod((String) context.parentContext.variables.get("method"));
 
                 StringBuilder response = new StringBuilder();
-                try(BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()))){
-                    String inputLine;
+                InputStream inputStream = connection.getResponseCode()==200?
+                        connection.getInputStream()
+                        :connection.getErrorStream();
+                try(Scanner scanner = new Scanner(inputStream, "UTF-8")){
 
-                    while ((inputLine = in.readLine()) != null)
-                        response.append(inputLine);
+                    while (scanner.hasNextLine())
+                        response.append(scanner.nextLine());
                 }
 
                 return response.toString();

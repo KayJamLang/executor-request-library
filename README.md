@@ -25,7 +25,7 @@ var response = req.execute();
 var params = map()
       .put("param1", 123);
 ```
-- Build query params using the function `buildHttpQuery`
+- Build query params using the functionContainer `buildHttpQuery`
 ```
 params = buildHttpQuery(params);
 ```
